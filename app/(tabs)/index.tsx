@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
 type ThemedTextType = 'title' | 'subtitle' | 'defaultSemiBold' | 'default';
 
@@ -38,6 +38,9 @@ const BalanceInput: React.FC<BalanceInputProps> = ({ label, value, onChange, pla
         placeholderTextColor="#9ca3af"
         value={value}
         onChangeText={onChange}
+        blurOnSubmit={true}
+        returnKeyType='done'
+        onSubmitEditing={() => Keyboard.dismiss()}
       />
       {unit && (
         <ThemedText style={styles.unitSuffix}>{unit}</ThemedText>
@@ -65,6 +68,9 @@ const SingleMacroInput: React.FC<SingleMacroInputProps> = ({ label, value, setVa
           placeholderTextColor="#9ca3af"
           value={value}
           onChangeText={setValue}
+          blurOnSubmit={true}
+          returnKeyType='done'
+          onSubmitEditing={() => Keyboard.dismiss()}
         />
         <ThemedText style={styles.unitSuffix}>{unit}</ThemedText>
       </View>
@@ -100,81 +106,83 @@ export default function HomeScreen() {
   };
   
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()} accessible={false}>
+      <ParallaxScrollView
+        headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+        headerImage={
+          <Image
+            source={require('@/assets/images/partial-react-logo.png')}
+            style={styles.reactLogo}
+          />
+        }>
 
-      <View style={styles.contentWrapper}>
+        <View style={styles.contentWrapper}>
 
-        <ThemedView style={styles.formCard}>
-            <ThemedText style={styles.headerText}>
-                Campus Craves
-            </ThemedText>
-            <ThemedText style={styles.subHeaderText}>
-                Enter your balance and nutritional goals.
-            </ThemedText>
+          <ThemedView style={styles.formCard}>
+              <ThemedText style={styles.headerText}>
+                  Campus Craves
+              </ThemedText>
+              <ThemedText style={styles.subHeaderText}>
+                  Enter your balance and nutritional goals.
+              </ThemedText>
 
-            <ThemedView style={styles.section}>
-              <ThemedText style={styles.sectionTitle}>Meal Plan Budget</ThemedText>
-              <BalanceInput
-                label="Balance"
-                value={balance}
-                onChange={setBalance}
-                placeholder="e.g., 75.00"
-                unit="USD"
-                isMoney={true}
-              />
-              
-            </ThemedView>
+              <ThemedView style={styles.section}>
+                <ThemedText style={styles.sectionTitle}>Meal Plan Budget</ThemedText>
+                <BalanceInput
+                  label="Balance"
+                  value={balance}
+                  onChange={setBalance}
+                  placeholder="e.g., 75.00"
+                  unit="USD"
+                  isMoney={true}
+                />
+                
+              </ThemedView>
 
-            <ThemedView style={[styles.section, styles.macroSection]}>
-              <ThemedText style={styles.sectionTitle}>Daily Macro Goals</ThemedText>
+              <ThemedView style={[styles.section, styles.macroSection]}>
+                <ThemedText style={styles.sectionTitle}>Daily Macro Goals</ThemedText>
 
-              <View style={styles.macroBlock}>
-                  <SingleMacroInput
-                      label="Calorie"
-                      value={calories} setValue={setCalories}
-                      unit="cal"
-                  />
+                <View style={styles.macroBlock}>
+                    <SingleMacroInput
+                        label="Calorie"
+                        value={calories} setValue={setCalories}
+                        unit="cal"
+                    />
+                </View>
+
+                <View style={styles.macroBlock}>
+                    <SingleMacroInput
+                        label="Protein"
+                        value={protein} setValue={setProtein}
+                        unit="g"
+                    />
+                </View>
+
+                <View style={styles.macroBlock}>
+                    <SingleMacroInput
+                        label="Fat"
+                        value={fat} setValue={setFat}
+                        unit="g"
+                    />
+                </View>
+                
+              </ThemedView>
+
+              <View style={styles.submitButtonWrapper}>
+                <TouchableOpacity
+                  onPress={handleSaveGoals}
+                  style={styles.submitButton}
+                >
+                  <ThemedText style={styles.submitButtonText}>
+                    Find Recommendations
+                  </ThemedText>
+                </TouchableOpacity>
               </View>
-
-              <View style={styles.macroBlock}>
-                  <SingleMacroInput
-                      label="Protein"
-                      value={protein} setValue={setProtein}
-                      unit="g"
-                  />
-              </View>
-
-              <View style={styles.macroBlock}>
-                  <SingleMacroInput
-                      label="Fat"
-                      value={fat} setValue={setFat}
-                      unit="g"
-                  />
-              </View>
-              
-            </ThemedView>
-
-            <View style={styles.submitButtonWrapper}>
-              <TouchableOpacity
-                onPress={handleSaveGoals}
-                style={styles.submitButton}
-              >
-                <ThemedText style={styles.submitButtonText}>
-                  Find Recommendations
-                </ThemedText>
-              </TouchableOpacity>
-            </View>
-        </ThemedView>
-        
-      </View>
-    </ParallaxScrollView>
+          </ThemedView>
+          
+        </View>
+      </ParallaxScrollView>
+    </TouchableWithoutFeedback>
   );
 }
 
